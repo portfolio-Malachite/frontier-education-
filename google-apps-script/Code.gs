@@ -6,6 +6,7 @@ const CONFIG = {
   DAILY_SUMMARY_HOUR: 18,
   ALLOWED_SITE_ORIGINS: [
     'https://malachitetechnologies0-ui.github.io',
+    'https://portfolio-malachite.github.io',
     'http://localhost:4173',
     'http://127.0.0.1:4173'
   ],

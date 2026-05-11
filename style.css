@@ -132,8 +132,6 @@ button {
 }
 
 .nav-shell {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -322,11 +320,6 @@ button {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-}
-
-.hero-actions .btn-primary svg {
-  width: 19px;
-  height: 19px;
 }
 
 .btn:hover {
@@ -704,12 +697,14 @@ footer[id] {
   font-size: 1.02rem;
 }
 
+.course-grid,
 .campus-grid,
 .process-grid {
   display: grid;
   gap: 16px;
 }
 
+.course-card,
 .campus-card,
 .process-card,
 .testimonial-card {
@@ -721,11 +716,20 @@ footer[id] {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), var(--shadow-card);
 }
 
+.course-card,
 .campus-card,
 .process-card {
   padding: 22px;
 }
 
+.course-card {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.course-card:hover,
 .campus-card:hover,
 .process-card:hover {
   transform: translateY(-5px);
@@ -733,6 +737,7 @@ footer[id] {
   box-shadow: 0 18px 40px rgba(6, 34, 55, 0.13);
 }
 
+.course-card::before,
 .campus-card::before,
 .process-card::before {
   content: "";
@@ -740,6 +745,14 @@ footer[id] {
   inset: 0 0 auto 0;
   height: 4px;
   background: linear-gradient(90deg, var(--teal), var(--green), var(--gold));
+}
+
+.highlight-card {
+  background: linear-gradient(180deg, #ffffff, #f3fbf8);
+  border-color: rgba(78, 175, 103, 0.28);
+}
+
+.icon-badge,
 .campus-card > svg {
   display: grid;
   place-items: center;
@@ -751,20 +764,49 @@ footer[id] {
   border-radius: 50%;
 }
 
+.icon-badge svg,
 .campus-card > svg {
   width: 24px;
   height: 24px;
 }
 
+.course-card h3,
 .campus-card h3,
 .process-card h3 {
   margin-bottom: 10px;
 }
 
+.course-card p,
 .campus-card p,
 .process-card p {
   margin: 0 0 16px;
   color: var(--muted);
+}
+
+.course-card ul {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 20px;
+  list-style: none;
+}
+
+.course-card li {
+  position: relative;
+  padding-left: 20px;
+  color: #314452;
+  font-size: 0.91rem;
+}
+
+.course-card li::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
 }
 
 .text-link {
@@ -1263,6 +1305,7 @@ body.menu-open .mobile-sticky-cta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .course-grid,
   .campus-grid,
   .process-grid,
   .footer-links {
@@ -1311,6 +1354,10 @@ body.menu-open .mobile-sticky-cta {
     font-size: 1.75rem;
   }
 
+  .course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .why-grid {
     grid-template-columns: 0.9fr 1.1fr;
   }
@@ -1319,10 +1366,7 @@ body.menu-open .mobile-sticky-cta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .campus-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+  .campus-grid,
   .process-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -1348,27 +1392,16 @@ body.menu-open .mobile-sticky-cta {
 
 @media (min-width: 980px) {
   .nav-shell {
-    gap: clamp(8px, 1vw, 14px);
     padding: 11px 14px 11px 20px;
   }
 
   .brand-logo {
-    width: clamp(148px, 13vw, 164px);
+    width: 164px;
   }
 
   .desktop-nav,
   .nav-shell .nav-cta {
     display: flex;
-  }
-
-  .desktop-nav a {
-    padding: 10px clamp(10px, 0.95vw, 14px);
-    font-size: 0.92rem;
-  }
-
-  .nav-shell .nav-cta {
-    padding-left: 16px;
-    padding-right: 16px;
   }
 
   .nav-toggle,
@@ -1400,8 +1433,20 @@ body.menu-open .mobile-sticky-cta {
     min-height: 292px;
   }
 
+  .course-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .course-card {
+    grid-column: span 2;
+  }
+
+  .highlight-card {
+    grid-column: span 2;
+  }
+
   .footer-links {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1416,6 +1461,15 @@ body.menu-open .mobile-sticky-cta {
 
   .hero-grid {
     grid-template-columns: minmax(0, 1fr) 456px;
+  }
+
+  .course-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .course-card,
+  .highlight-card {
+    grid-column: span 1;
   }
 
   .testimonial-track {
@@ -1451,6 +1505,7 @@ body.menu-open .mobile-sticky-cta {
   }
 
   .lead-card,
+  .course-card,
   .campus-card,
   .process-card,
   .testimonial-card {
