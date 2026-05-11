@@ -71,7 +71,7 @@ function doPost(e) {
     const submittedAt = new Date();
 
     appendEnquiryRow_(sheet, submittedAt, payload);
-    sendInstantNotification_(submittedAt, payload);
+    sendInstantNotification_(sheet);
 
     return jsonResponse_({
       ok: true,
@@ -103,6 +103,7 @@ function sendDailySummaryEmail() {
   assertConfigured_();
 
   const sheet = getOrCreateSheet_();
+  const sheetUrl = getSheetUrl_(sheet);
   const values = sheet.getDataRange().getValues();
   const rows = values.slice(1);
   const todayKey = Utilities.formatDate(new Date(), CONFIG.TIMEZONE, 'yyyy-MM-dd');
@@ -121,42 +122,30 @@ function sendDailySummaryEmail() {
     GmailApp.sendEmail(
       CONFIG.OWNER_EMAIL,
       subject,
-      'No enquiries were received today.',
+      [
+        'No enquiries were received today.',
+        '',
+        'View all enquiries here:',
+        sheetUrl
+      ].join('\n'),
       {
         htmlBody: `
           <p>No enquiries were received today.</p>
           <p>Date: <strong>${escapeHtml_(subjectDate)}</strong></p>
+          <p>View all enquiries here:</p>
+          <p><a href="${escapeHtml_(sheetUrl)}">${escapeHtml_(sheetUrl)}</a></p>
         `
       }
     );
     return;
   }
 
-  const htmlRows = todaysEntries.map((row) => {
-    const timestamp = formatTimestamp_(row[0]);
-
-    return `
-      <tr>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(timestamp)}</td>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(row[1])}</td>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(row[2])}</td>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(row[3])}</td>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(row[4])}</td>
-        <td style="padding:10px;border:1px solid #dbe8eb;">${escapeHtml_(row[5])}</td>
-      </tr>
-    `;
-  }).join('');
-
-  const plainBody = todaysEntries.map((row, index) => {
-    return [
-      `${index + 1}. ${row[1]}`,
-      `   Email: ${row[2]}`,
-      `   Phone: ${row[3]}`,
-      `   Preferred Course: ${row[4]}`,
-      `   Preferred Campus: ${row[5]}`,
-      `   Submitted: ${formatTimestamp_(row[0])}`
-    ].join('\n');
-  }).join('\n\n');
+  const plainBody = [
+    `A daily Frontier Education enquiry summary is ready for ${subjectDate}.`,
+    '',
+    'View all enquiries here:',
+    sheetUrl
+  ].join('\n');
 
   GmailApp.sendEmail(
     CONFIG.OWNER_EMAIL,
@@ -164,22 +153,9 @@ function sendDailySummaryEmail() {
     plainBody,
     {
       htmlBody: `
-        <p>Here is your daily Frontier Education enquiry summary for <strong>${escapeHtml_(subjectDate)}</strong>.</p>
-        <table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;">
-          <thead>
-            <tr>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Timestamp</th>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Full Name</th>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Email Address</th>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Phone Number</th>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Preferred Course</th>
-              <th style="padding:10px;border:1px solid #dbe8eb;background:#eef7fb;text-align:left;">Preferred Campus</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${htmlRows}
-          </tbody>
-        </table>
+        <p>A daily Frontier Education enquiry summary is ready for <strong>${escapeHtml_(subjectDate)}</strong>.</p>
+        <p>View all enquiries here:</p>
+        <p><a href="${escapeHtml_(sheetUrl)}">${escapeHtml_(sheetUrl)}</a></p>
       `
     }
   );
@@ -234,31 +210,25 @@ function appendEnquiryRow_(sheet, submittedAt, payload) {
   ]);
 }
 
-function sendInstantNotification_(submittedAt, payload) {
+function getSheetUrl_(sheet) {
+  return `${sheet.getParent().getUrl()}#gid=${sheet.getSheetId()}`;
+}
+
+function sendInstantNotification_(sheet) {
   const subject = 'New Frontier Education Enquiry';
-  const formattedTime = formatTimestamp_(submittedAt);
+  const sheetUrl = getSheetUrl_(sheet);
 
   const plainBody = [
-    'A new Frontier Education enquiry has been received.',
+    'A new enquiry has been received.',
     '',
-    `Full Name: ${payload.fullName}`,
-    `Email: ${payload.email}`,
-    `Phone Number: ${payload.phone}`,
-    `Preferred Course: ${payload.course}`,
-    `Preferred Campus: ${payload.campus}`,
-    `Submission Time: ${formattedTime}`
+    'View all enquiries here:',
+    sheetUrl
   ].join('\n');
 
   const htmlBody = `
-    <p>A new Frontier Education enquiry has been received.</p>
-    <table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;">
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Full Name</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(payload.fullName)}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Email</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(payload.email)}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Phone Number</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(payload.phone)}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Preferred Course</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(payload.course)}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Preferred Campus</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(payload.campus)}</td></tr>
-      <tr><td style="padding:8px 12px;border:1px solid #dbe8eb;"><strong>Submission Time</strong></td><td style="padding:8px 12px;border:1px solid #dbe8eb;">${escapeHtml_(formattedTime)}</td></tr>
-    </table>
+    <p>A new enquiry has been received.</p>
+    <p>View all enquiries here:</p>
+    <p><a href="${escapeHtml_(sheetUrl)}">${escapeHtml_(sheetUrl)}</a></p>
   `;
 
   GmailApp.sendEmail(CONFIG.OWNER_EMAIL, subject, plainBody, { htmlBody });
@@ -357,10 +327,6 @@ function sanitiseText_(value, maxLength) {
   }
 
   return trimmed;
-}
-
-function formatTimestamp_(value) {
-  return Utilities.formatDate(new Date(value), CONFIG.TIMEZONE, 'dd MMM yyyy, hh:mm a');
 }
 
 function escapeHtml_(value) {
