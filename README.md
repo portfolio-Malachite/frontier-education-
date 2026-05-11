@@ -1,6 +1,6 @@
 # Frontier Education
 
-Static landing page for Frontier Education, ready for GitHub Pages hosting.
+Static landing page for Frontier Education, ready for local preview and GitHub Pages hosting.
 
 ## Files
 
@@ -9,6 +9,7 @@ Static landing page for Frontier Education, ready for GitHub Pages hosting.
 - `script.js` - navbar, CTA, form, and interaction logic
 - `google-apps-script/Code.gs` - Google Apps Script backend for Sheets + Gmail
 - `google-apps-script/appsscript.json` - Apps Script manifest
+- `google-apps-script/SETUP.md` - local spreadsheet, Apps Script, and deployment guide
 
 ## Local Preview
 
@@ -18,14 +19,14 @@ python3 -m http.server 4173
 
 Then open `http://127.0.0.1:4173`.
 
-## Form Setup
+## Enquiry Form Setup
 
-1. Deploy the Apps Script in `google-apps-script/`.
-2. Copy the deployed `/exec` URL.
-3. Replace `PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE` in `index.html`.
-4. Replace `PASTE_YOUR_SPREADSHEET_ID_HERE` in `google-apps-script/Code.gs`.
+The enquiry form is wired for a Google Apps Script backend. Follow the full setup guide in [google-apps-script/SETUP.md](./google-apps-script/SETUP.md).
 
 ## Notes
 
 - The site is built with plain HTML, CSS, and JavaScript.
-- The form is designed to work from GitHub Pages through a Google Apps Script web app.
+- The frontend now shows only production form messages:
+  - Success: `Thank you! Your enquiry has been submitted successfully.`
+  - Error: `Something went wrong. Please try again.`
+- The form backend expects a deployed Google Apps Script web app `/exec` URL in the `data-script-url` attribute on the enquiry form.

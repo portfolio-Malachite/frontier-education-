@@ -19,7 +19,6 @@
   const nextButton = document.querySelector("[data-carousel-next]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const formScriptUrl = form?.dataset.scriptUrl?.trim() || "";
-  const FORM_SCRIPT_URL_PLACEHOLDER = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
   let headerOffset = 120;
   let scrollFrame = 0;
@@ -430,6 +429,8 @@
     };
   };
 
+  const isValidFormEndpoint = (value) => /^https:\/\/script\.google\.com\/macros\/s\/[-_a-zA-Z0-9]+\/exec(?:\?.*)?$/.test(value);
+
   if (form) {
     const fields = [
       ...form.querySelectorAll(
@@ -462,8 +463,8 @@
         return;
       }
 
-      if (!formScriptUrl || formScriptUrl === FORM_SCRIPT_URL_PLACEHOLDER) {
-        setFormStatus("Add your deployed Google Apps Script URL before using the live form.", "error");
+      if (!isValidFormEndpoint(formScriptUrl)) {
+        setFormStatus("Something went wrong. Please try again.", "error");
         return;
       }
 
@@ -472,7 +473,7 @@
       const now = Date.now();
 
       if (submissionFingerprint === lastSubmissionFingerprint && now - lastSubmissionAt < 120000) {
-        setFormStatus("This enquiry was already submitted recently. Please wait a moment before sending it again.", "error");
+        setFormStatus("Thank you! Your enquiry has been submitted successfully.", "success");
         return;
       }
 
@@ -487,21 +488,18 @@
         });
 
         const responseText = await response.text();
-        let result = { ok: response.ok };
+        let result = null;
 
         if (responseText) {
           try {
             result = JSON.parse(responseText);
           } catch (parseError) {
-            result = {
-              ok: response.ok,
-              message: "The form service returned an unexpected response."
-            };
+            throw new Error("Unexpected response");
           }
         }
 
-        if (!response.ok || !result.ok) {
-          throw new Error(result.message || "Sorry, we could not submit your enquiry right now.");
+        if (!response.ok || !result || result.ok !== true) {
+          throw new Error("Submission failed");
         }
 
         lastSubmissionFingerprint = submissionFingerprint;
@@ -511,17 +509,9 @@
         syncFormMetadata();
         fields.forEach((field) => setFieldError(field, ""));
 
-        setFormStatus(
-          result.message || "Thank you! Your enquiry has been received. Our study advisor will contact you shortly.",
-          "success"
-        );
+        setFormStatus("Thank you! Your enquiry has been submitted successfully.", "success");
       } catch (error) {
-        setFormStatus(
-          error instanceof Error
-            ? error.message
-            : "Sorry, we could not submit your enquiry right now. Please try again in a few minutes.",
-          "error"
-        );
+        setFormStatus("Something went wrong. Please try again.", "error");
       } finally {
         setSubmittingState(false);
       }

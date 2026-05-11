@@ -1,18 +1,22 @@
 const CONFIG = {
   OWNER_EMAIL: 'adityakumarasd852@gmail.com',
-  SPREADSHEET_ID: 'PASTE_YOUR_SPREADSHEET_ID_HERE',
+  SPREADSHEET_ID: '1EcuyygiGzoUfFBR2FzbF8ci7brAUPcW132RRgwt6B5Y',
   SHEET_NAME: 'Enquiries',
   TIMEZONE: 'Australia/Brisbane',
   DAILY_SUMMARY_HOUR: 18,
   ALLOWED_SITE_ORIGINS: [
-    'https://malachitetechnologies0-ui.github.io',
     'https://portfolio-malachite.github.io',
     'http://localhost:4173',
-    'http://127.0.0.1:4173'
+    'http://127.0.0.1:4173',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500'
   ],
   HONEYPOT_FIELD: 'website',
   DUPLICATE_CACHE_TTL_SECONDS: 120
 };
+
+const SUCCESS_MESSAGE = 'Thank you! Your enquiry has been submitted successfully.';
+const ERROR_MESSAGE = 'Something went wrong. Please try again.';
 
 const SHEET_HEADERS = [
   'Timestamp',
@@ -47,18 +51,19 @@ function doPost(e) {
     if (payload.isSpam) {
       return jsonResponse_({
         ok: true,
-        message: 'Thank you. Your enquiry has been received.'
+        message: SUCCESS_MESSAGE
       });
     }
 
     lock.waitLock(10000);
     assertConfigured_();
+    ensureDailySummaryTrigger_();
 
     const duplicate = checkDuplicateSubmission_(payload);
     if (duplicate) {
       return jsonResponse_({
         ok: true,
-        message: 'This enquiry was already received. Please wait a moment before sending it again.'
+        message: SUCCESS_MESSAGE
       });
     }
 
@@ -70,14 +75,14 @@ function doPost(e) {
 
     return jsonResponse_({
       ok: true,
-      message: 'Thank you! Your enquiry has been received. Our study advisor will contact you shortly.'
+      message: SUCCESS_MESSAGE
     });
   } catch (error) {
     console.error('Enquiry submission failed', error);
 
     return jsonResponse_({
       ok: false,
-      message: 'Sorry, we could not submit your enquiry right now. Please try again in a few minutes.'
+      message: ERROR_MESSAGE
     });
   } finally {
     try {
@@ -91,7 +96,7 @@ function doPost(e) {
 function setupProject() {
   assertConfigured_();
   getOrCreateSheet_();
-  createDailySummaryTrigger_();
+  ensureDailySummaryTrigger_();
 }
 
 function sendDailySummaryEmail() {
@@ -180,14 +185,13 @@ function sendDailySummaryEmail() {
   );
 }
 
-function createDailySummaryTrigger_() {
+function ensureDailySummaryTrigger_() {
   const triggers = ScriptApp.getProjectTriggers();
+  const existingTrigger = triggers.some((trigger) => trigger.getHandlerFunction() === 'sendDailySummaryEmail');
 
-  triggers.forEach((trigger) => {
-    if (trigger.getHandlerFunction() === 'sendDailySummaryEmail') {
-      ScriptApp.deleteTrigger(trigger);
-    }
-  });
+  if (existingTrigger) {
+    return;
+  }
 
   ScriptApp.newTrigger('sendDailySummaryEmail')
     .timeBased()
