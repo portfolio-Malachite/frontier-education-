@@ -1,5 +1,5 @@
 const CONFIG = {
-  OWNER_EMAIL: 'adityakumarasd852@gmail.com',
+  OWNER_EMAIL: 'frontierteam68@gmail.com',
   SPREADSHEET_ID: '1EcuyygiGzoUfFBR2FzbF8ci7brAUPcW132RRgwt6B5Y',
   SHEET_NAME: 'Enquiries',
   TIMEZONE: 'Asia/Kolkata',
@@ -24,7 +24,7 @@ const SHEET_HEADERS = [
   'Email Address',
   'Phone Number',
   'Nationality',
-  'Preferred Campus'
+  'Preferred Course'
 ];
 
 function doGet() {
@@ -209,7 +209,7 @@ function appendEnquiryRow_(sheet, submittedAt, payload) {
     payload.email,
     payload.phone,
     payload.nationality,
-    payload.campus
+    payload.preferredCourse
   ]);
 }
 
@@ -256,7 +256,7 @@ function normalisePayload_(e) {
     email: sanitiseText_(source.email, 160).toLowerCase(),
     phone: sanitiseText_(source.phone, 40),
     nationality: sanitiseText_(source.nationality, 160),
-    campus: sanitiseText_(source.campus, 80),
+    preferredCourse: sanitiseText_(source.preferredCourse || source.campus, 80),
     siteOrigin,
     pageUrl,
     honeypotValue,
@@ -273,7 +273,7 @@ function validatePayload_(payload) {
     return { ok: false, message: 'This form origin is not allowed.' };
   }
 
-  if (!payload.fullName || !payload.email || !payload.phone || !payload.nationality || !payload.campus) {
+  if (!payload.fullName || !payload.email || !payload.phone || !payload.nationality || !payload.preferredCourse) {
     return { ok: false, message: 'Please complete all required fields.' };
   }
 
@@ -296,7 +296,7 @@ function checkDuplicateSubmission_(payload) {
     payload.email,
     payload.phone,
     payload.nationality,
-    payload.campus
+    payload.preferredCourse
   ].join('|'));
 
   if (cache.get(fingerprint)) {

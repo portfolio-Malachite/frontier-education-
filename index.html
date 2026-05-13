@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
   <link rel="stylesheet" href="./style.css">
 
   <script type="application/ld+json">
@@ -221,6 +222,7 @@
             method="POST"
             novalidate
             data-formspree-endpoint="https://formspree.io/f/REPLACE_WITH_REAL_FORM_ID"
+            data-script-url="https://script.google.com/macros/s/AKfycbzUrr40HZhB1Qap8odsPMV2XraCNF2Vkb5_YZ48hXDJHZWbuHOeyB0MbRMcd8X1xIlc/exec"
           >
             <div class="field">
               <label for="full-name">Full Name</label>
@@ -236,7 +238,7 @@
 
             <div class="field">
               <label for="phone">Phone Number</label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Phone Number" required>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" required>
               <span class="field-error" data-error-for="phone"></span>
             </div>
 
@@ -462,6 +464,8 @@
               <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
             </div>
 
+            <input type="hidden" name="siteOrigin" value="">
+            <input type="hidden" name="pageUrl" value="">
             <input type="hidden" name="_subject" value="New Frontier Education Consultation Enquiry">
 
             <button class="btn btn-primary btn-form" type="submit" data-default-label="Submit">Submit</button>
@@ -891,6 +895,7 @@
     <a class="btn btn-secondary" href="tel:+61721157877">Call</a>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
   <script src="./script.js" defer></script>
 </body>
 </html>

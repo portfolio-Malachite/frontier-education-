@@ -11,7 +11,10 @@
   const form = document.querySelector("#enquiry-form");
   const status = document.querySelector("#form-status");
   const formSubmitButton = form?.querySelector(".btn-form") || null;
+  const phoneField = form?.querySelector("#phone") || null;
   const honeypotField = form?.querySelector('[name="website"]') || null;
+  const siteOriginField = form?.querySelector('[name="siteOrigin"]') || null;
+  const pageUrlField = form?.querySelector('[name="pageUrl"]') || null;
   const formSubjectField = form?.querySelector('[name="_subject"]') || null;
   const stickyCta = document.querySelector(".mobile-sticky-cta");
   const testimonialTrack = document.querySelector("[data-testimonial-track]");
@@ -20,12 +23,14 @@
   const faqItems = [...document.querySelectorAll(".faq-item")];
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const formSpreeEndpoint = form?.dataset.formspreeEndpoint?.trim() || form?.getAttribute("action")?.trim() || "";
+  const formScriptUrl = form?.dataset.scriptUrl?.trim() || "";
 
   let headerOffset = 120;
   let scrollFrame = 0;
   let isSubmitting = false;
   let lastSubmissionFingerprint = "";
   let lastSubmissionAt = 0;
+  let phoneInputInstance = null;
 
   const debounce = (callback, delay = 120) => {
     let timeoutId = 0;
@@ -408,6 +413,64 @@
       : formSubmitButton.dataset.defaultLabel || "Submit Enquiry";
   };
 
+  const syncFormMetadata = () => {
+    if (siteOriginField) {
+      siteOriginField.value = window.location.origin;
+    }
+
+    if (pageUrlField) {
+      pageUrlField.value = window.location.href;
+    }
+  };
+
+  const initInternationalPhoneField = () => {
+    if (!phoneField || typeof window.intlTelInput !== "function") return;
+
+    phoneInputInstance = window.intlTelInput(phoneField, {
+      initialCountry: "auto",
+      preferredCountries: ["au", "in", "us"],
+      separateDialCode: true,
+      nationalMode: false,
+      autoPlaceholder: "polite",
+      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+      geoIpLookup: (callback) => {
+        fetch("https://ipapi.co/json/")
+          .then((response) => response.json())
+          .then((data) => callback((data?.country_code || "au").toLowerCase()))
+          .catch(() => callback("au"));
+      }
+    });
+  };
+
+  const getInternationalPhoneValue = () => {
+    const rawValue = normaliseInput(phoneField?.value || "");
+    if (!rawValue) return "";
+
+    if (phoneInputInstance && typeof phoneInputInstance.getNumber === "function") {
+      const formattedValue = normaliseInput(phoneInputInstance.getNumber());
+      if (formattedValue) return formattedValue;
+    }
+
+    const dialCode = phoneInputInstance?.getSelectedCountryData?.().dialCode || "";
+    if (dialCode && !rawValue.startsWith("+")) {
+      return `+${dialCode} ${rawValue}`.trim();
+    }
+
+    return rawValue;
+  };
+
+  const isInternationalPhoneValid = () => {
+    const formattedValue = getInternationalPhoneValue();
+    if (!formattedValue) return false;
+
+    if (phoneInputInstance && typeof phoneInputInstance.isValidNumber === "function" && window.intlTelInputUtils) {
+      return phoneInputInstance.isValidNumber();
+    }
+
+    const digits = formattedValue.replace(/\D/g, "");
+    return digits.length >= 7 && digits.length <= 15;
+  };
+
   const setFieldError = (field, message) => {
     const wrapper = field.closest(".field");
     const error = document.querySelector(`[data-error-for="${field.id}"]`);
@@ -438,8 +501,7 @@
     }
 
     if (field.type === "tel" && value) {
-      const digits = value.replace(/\D/g, "");
-      if (digits.length < 7) {
+      if (!isInternationalPhoneValid()) {
         setFieldError(field, "Please enter a valid phone number.");
         return false;
       }
@@ -450,16 +512,25 @@
   };
 
   const buildEnquiryPayload = (fields) => {
+    syncFormMetadata();
+
+    const preferredCourse = normaliseInput(fields.find((field) => field.name === "preferredCourse")?.value || "");
+
     return {
       fullName: normaliseInput(fields.find((field) => field.name === "fullName")?.value || ""),
       email: normaliseInput(fields.find((field) => field.name === "email")?.value || "").toLowerCase(),
-      phone: normaliseInput(fields.find((field) => field.name === "phone")?.value || ""),
+      phone: getInternationalPhoneValue(),
       nationality: normaliseInput(fields.find((field) => field.name === "nationality")?.value || ""),
-      preferredCourse: normaliseInput(fields.find((field) => field.name === "preferredCourse")?.value || "")
+      preferredCourse,
+      campus: preferredCourse,
+      website: honeypotField ? normaliseInput(honeypotField.value) : "",
+      siteOrigin: siteOriginField?.value || window.location.origin,
+      pageUrl: pageUrlField?.value || window.location.href
     };
   };
 
   const isValidFormEndpoint = (value) => /^https:\/\/formspree\.io\/f\/[-_a-zA-Z0-9]+(?:\?.*)?$/.test(value);
+  const isValidAppsScriptEndpoint = (value) => /^https:\/\/script\.google\.com\/macros\/s\/[-_a-zA-Z0-9]+\/exec(?:\?.*)?$/.test(value);
 
   if (form) {
     const fields = [
@@ -468,6 +539,8 @@
       )
     ];
 
+    syncFormMetadata();
+    initInternationalPhoneField();
     setSubmittingState(false);
 
     fields.forEach((field) => {
@@ -477,6 +550,8 @@
       });
       field.addEventListener("change", () => validateField(field));
     });
+
+    phoneField?.addEventListener("countrychange", () => validateField(phoneField));
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -492,7 +567,10 @@
         return;
       }
 
-      if (!isValidFormEndpoint(formSpreeEndpoint)) {
+      const useFormspree = isValidFormEndpoint(formSpreeEndpoint);
+      const useAppsScriptFallback = !useFormspree && isValidAppsScriptEndpoint(formScriptUrl);
+
+      if (!useFormspree && !useAppsScriptFallback) {
         setFormStatus("Something went wrong. Please try again.", "error");
         return;
       }
@@ -517,17 +595,27 @@
       setFormStatus("Sending your enquiry...", "loading");
 
       try {
-        const response = await fetch(formSpreeEndpoint, {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            ...payload,
-            _subject: normaliseInput(formSubjectField?.value || "New Frontier Education Consultation Enquiry")
-          })
-        });
+        const endpoint = useFormspree ? formSpreeEndpoint : formScriptUrl;
+        const response = await fetch(
+          endpoint,
+          useFormspree
+            ? {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  ...payload,
+                  _subject: normaliseInput(formSubjectField?.value || "New Frontier Education Consultation Enquiry")
+                })
+              }
+            : {
+                method: "POST",
+                body: new URLSearchParams(payload),
+                redirect: "follow"
+              }
+        );
 
         let result = null;
         try {
@@ -544,6 +632,7 @@
         lastSubmissionAt = now;
 
         form.reset();
+        phoneInputInstance?.setNumber("");
         fields.forEach((field) => setFieldError(field, ""));
 
         setFormStatus("Thank you! Our team will contact you shortly.", "success");
