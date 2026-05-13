@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="./assets/logos/frontier-favicon.png">
 
   <meta property="og:title" content="Frontier Education Australia | Career-Focused Courses & Student Support">
-  <meta property="og:description" content="Build practical, career-ready skills with Frontier Education across Brisbane, Cairns, Hobart, and Adelaide.">
+  <meta property="og:description" content="Build practical, career-ready skills with Frontier Education across Brisbane, Cairns.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://frontiereducation.edu.au/">
   <meta property="og:image" content="./assets/images/industry-connected-course-900.jpg">
@@ -126,10 +126,10 @@
         </a>
 
         <nav class="desktop-nav" aria-label="Primary navigation">
+          <a href="#why">Why Frontier</a>
           <a class="has-caret" href="#courses">Courses
           </a>
           <a href="#campuses">Campuses</a>
-          <a href="#why">Why Frontier</a>
           <a href="#testimonials">Testimonials</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -144,9 +144,9 @@
       </div>
 
       <nav class="mobile-panel" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true" data-mobile-menu>
+        <a href="#why">Why Frontier</a>
         <a href="#courses">Courses</a>
         <a href="#campuses">Campuses</a>
-        <a href="#why">Why Frontier</a>
         <a href="#testimonials">Testimonials</a>
         <a href="#contact">Contact</a>
         <a class="btn btn-primary" href="#enquiry">Enquire Now</a>
@@ -177,7 +177,7 @@
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.11.37 2.3.56 3.58.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.27.19 2.47.56 3.58a1 1 0 0 1-.25 1.01l-2.19 2.2Z"></path>
               </svg>
-              <span>+61 422 961 101</span>
+              <span>+61 7 2115 7877</span>
             </a>
           </div>
 
@@ -214,7 +214,14 @@
             <p>Tell us what you want to study and our team will guide you through your next step.</p>
           </div>
 
-          <form class="enquiry-form" id="enquiry-form" novalidate data-script-url="https://script.google.com/macros/s/AKfycbzUrr40HZhB1Qap8odsPMV2XraCNF2Vkb5_YZ48hXDJHZWbuHOeyB0MbRMcd8X1xIlc/exec">
+          <form
+            class="enquiry-form"
+            id="enquiry-form"
+            action="https://formspree.io/f/REPLACE_WITH_REAL_FORM_ID"
+            method="POST"
+            novalidate
+            data-formspree-endpoint="https://formspree.io/f/REPLACE_WITH_REAL_FORM_ID"
+          >
             <div class="field">
               <label for="full-name">Full Name</label>
               <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Full Name" required>
@@ -235,7 +242,7 @@
 
             <div class="field">
               <label for="nationality">Nationality</label>
-              <select id="nationality" name="nationality" required>
+              <select id="nationality" name="nationality">
                 <option value="">--Select Nationality</option>
                 <option>Afghanistan</option>
                 <option>Albania</option>
@@ -439,15 +446,15 @@
             </div>
 
             <div class="field">
-              <label for="campus">Preferred Campus</label>
-              <select id="campus" name="campus" required>
-                <option value="">--Preferred Campus</option>
+              <label for="preferred-course">Preferred Course</label>
+              <select id="preferred-course" name="preferredCourse">
+                <option value="">--Preferred Course</option>
                 <option>Hospitality</option>
                 <option>Community Services</option>
                 <option>Business &amp; Management</option>
                 <option>Artificial Intelligence</option>
               </select>
-              <span class="field-error" data-error-for="campus"></span>
+              <span class="field-error" data-error-for="preferred-course"></span>
             </div>
 
             <div class="field field-honeypot" aria-hidden="true">
@@ -455,8 +462,7 @@
               <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
             </div>
 
-            <input type="hidden" name="siteOrigin" value="">
-            <input type="hidden" name="pageUrl" value="">
+            <input type="hidden" name="_subject" value="New Frontier Education Consultation Enquiry">
 
             <button class="btn btn-primary btn-form" type="submit" data-default-label="Submit">Submit</button>
             <p class="trust-line">Our study advisor will contact you shortly.</p>
@@ -467,7 +473,7 @@
     </section>
 
     <div class="section-anchor" id="offer" aria-hidden="true"></div>
-    <div class="section-anchor" id="courses" aria-hidden="true"></div>
+    <div class="section-anchor" id="frontier-overview" aria-hidden="true"></div>
   
     <section class="section why-section why-section-feature" id="why" aria-labelledby="why-title">
       <div class="section-inner why-grid">
@@ -506,7 +512,7 @@
               <svg><use href="#icon-check"></use></svg>
               <div>
                 <h3>Multiple campus locations</h3>
-                <p>Study options across Brisbane, Cairns, Hobart, and Adelaide.</p>
+                <p>Study options across Brisbane, Cairns.</p>
               </div>
             </article>
             <article>
@@ -534,7 +540,7 @@
         </div>
       </div>
     </section>
-    <section class="section gain-section" aria-labelledby="gain-title">
+    <section class="section gain-section" id="courses" aria-labelledby="gain-title">
       <div class="section-inner gain-grid">
         <div class="gain-content reveal">
           <h2 id="gain-title" class="gain-title">
@@ -559,7 +565,7 @@
               </svg>
               <span>Chat on WhatsApp</span>
             </a>
-            <a class="gain-cta-button" href="tel:+61422961101" aria-label="Call Frontier Education on +61 422 961 101">Call Us On + 61 422 961 101</a>
+            <a class="gain-cta-button" href="tel:+61422961101" aria-label="Call Frontier Education on +61 422 961 101">Call Us On +61 7 2115 7877</a>
           </div>
         </div>
 
@@ -618,7 +624,7 @@
       </div>
     </section>
 
-    <section class="section visit-campuses-section" aria-labelledby="visit-campuses-title">
+    <section class="section visit-campuses-section" id="campuses" aria-labelledby="visit-campuses-title">
       <div class="section-inner">
         <div class="visit-campuses-heading reveal">
           <h2 id="visit-campuses-title">
@@ -836,11 +842,6 @@
         <div class="footer-mini-cta">
           <span>Need help choosing a course?</span>
           <a href="#enquiry">Talk to an advisor</a>
-        </div>
-        <div class="social-links" aria-label="Social links">
-          <a href="https://www.facebook.com/FrontierAustralia/" aria-label="Facebook">f</a>
-          <a href="https://au.linkedin.com/company/frontier-leadership-pty-ltd-t-as-frontier-education" aria-label="LinkedIn">in</a>
-          <a href="https://www.instagram.com/frontier_australia/" aria-label="Instagram">ig</a>
         </div>
       </div>
 

@@ -21,12 +21,12 @@ Then open `http://127.0.0.1:4173`.
 
 ## Enquiry Form Setup
 
-The enquiry form is wired for a Google Apps Script backend. Follow the full setup guide in [google-apps-script/SETUP.md](./google-apps-script/SETUP.md).
+The enquiry form is prepared for Formspree delivery. Replace the placeholder endpoint in [index.html](./index.html) with the real `https://formspree.io/f/...` URL from the Formspree form connected to `frontierteam68@gmail.com`.
 
 ## Notes
 
 - The site is built with plain HTML, CSS, and JavaScript.
 - The frontend now shows only production form messages:
-  - Success: `Thank you! Your enquiry has been submitted successfully.`
+  - Success: `Thank you! Our team will contact you shortly.`
   - Error: `Something went wrong. Please try again.`
-- The form backend expects a deployed Google Apps Script web app `/exec` URL in the `data-script-url` attribute on the enquiry form.
+- The form expects a live Formspree endpoint in the `action` and `data-formspree-endpoint` attributes on the enquiry form.

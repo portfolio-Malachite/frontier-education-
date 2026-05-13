@@ -12,15 +12,14 @@
   const status = document.querySelector("#form-status");
   const formSubmitButton = form?.querySelector(".btn-form") || null;
   const honeypotField = form?.querySelector('[name="website"]') || null;
-  const siteOriginField = form?.querySelector('[name="siteOrigin"]') || null;
-  const pageUrlField = form?.querySelector('[name="pageUrl"]') || null;
+  const formSubjectField = form?.querySelector('[name="_subject"]') || null;
   const stickyCta = document.querySelector(".mobile-sticky-cta");
   const testimonialTrack = document.querySelector("[data-testimonial-track]");
   const prevButton = document.querySelector("[data-carousel-prev]");
   const nextButton = document.querySelector("[data-carousel-next]");
   const faqItems = [...document.querySelectorAll(".faq-item")];
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const formScriptUrl = form?.dataset.scriptUrl?.trim() || "";
+  const formSpreeEndpoint = form?.dataset.formspreeEndpoint?.trim() || form?.getAttribute("action")?.trim() || "";
 
   let headerOffset = 120;
   let scrollFrame = 0;
@@ -409,16 +408,6 @@
       : formSubmitButton.dataset.defaultLabel || "Submit Enquiry";
   };
 
-  const syncFormMetadata = () => {
-    if (siteOriginField) {
-      siteOriginField.value = window.location.origin;
-    }
-
-    if (pageUrlField) {
-      pageUrlField.value = window.location.href;
-    }
-  };
-
   const setFieldError = (field, message) => {
     const wrapper = field.closest(".field");
     const error = document.querySelector(`[data-error-for="${field.id}"]`);
@@ -461,30 +450,24 @@
   };
 
   const buildEnquiryPayload = (fields) => {
-    syncFormMetadata();
-
     return {
       fullName: normaliseInput(fields.find((field) => field.name === "fullName")?.value || ""),
       email: normaliseInput(fields.find((field) => field.name === "email")?.value || "").toLowerCase(),
       phone: normaliseInput(fields.find((field) => field.name === "phone")?.value || ""),
       nationality: normaliseInput(fields.find((field) => field.name === "nationality")?.value || ""),
-      campus: normaliseInput(fields.find((field) => field.name === "campus")?.value || ""),
-      website: honeypotField ? normaliseInput(honeypotField.value) : "",
-      siteOrigin: siteOriginField?.value || window.location.origin,
-      pageUrl: pageUrlField?.value || window.location.href
+      preferredCourse: normaliseInput(fields.find((field) => field.name === "preferredCourse")?.value || "")
     };
   };
 
-  const isValidFormEndpoint = (value) => /^https:\/\/script\.google\.com\/macros\/s\/[-_a-zA-Z0-9]+\/exec(?:\?.*)?$/.test(value);
+  const isValidFormEndpoint = (value) => /^https:\/\/formspree\.io\/f\/[-_a-zA-Z0-9]+(?:\?.*)?$/.test(value);
 
   if (form) {
     const fields = [
       ...form.querySelectorAll(
-        'input[name="fullName"], input[name="email"], input[name="phone"], select[name="nationality"], select[name="campus"]'
+        'input[name="fullName"], input[name="email"], input[name="phone"], select[name="nationality"], select[name="preferredCourse"]'
       )
     ];
 
-    syncFormMetadata();
     setSubmittingState(false);
 
     fields.forEach((field) => {
@@ -509,8 +492,15 @@
         return;
       }
 
-      if (!isValidFormEndpoint(formScriptUrl)) {
+      if (!isValidFormEndpoint(formSpreeEndpoint)) {
         setFormStatus("Something went wrong. Please try again.", "error");
+        return;
+      }
+
+      if (honeypotField && normaliseInput(honeypotField.value)) {
+        form.reset();
+        fields.forEach((field) => setFieldError(field, ""));
+        setFormStatus("Thank you! Our team will contact you shortly.", "success");
         return;
       }
 
@@ -519,7 +509,7 @@
       const now = Date.now();
 
       if (submissionFingerprint === lastSubmissionFingerprint && now - lastSubmissionAt < 120000) {
-        setFormStatus("Thank you! Your enquiry has been submitted successfully.", "success");
+        setFormStatus("Thank you! Our team will contact you shortly.", "success");
         return;
       }
 
@@ -527,21 +517,23 @@
       setFormStatus("Sending your enquiry...", "loading");
 
       try {
-        const response = await fetch(formScriptUrl, {
+        const response = await fetch(formSpreeEndpoint, {
           method: "POST",
-          body: new URLSearchParams(payload),
-          redirect: "follow"
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ...payload,
+            _subject: normaliseInput(formSubjectField?.value || "New Frontier Education Consultation Enquiry")
+          })
         });
 
-        const responseText = await response.text();
         let result = null;
-
-        if (responseText) {
-          try {
-            result = JSON.parse(responseText);
-          } catch (parseError) {
-            throw new Error("Unexpected response");
-          }
+        try {
+          result = await response.json();
+        } catch (parseError) {
+          result = null;
         }
 
         if (!response.ok || !result || result.ok !== true) {
@@ -552,10 +544,9 @@
         lastSubmissionAt = now;
 
         form.reset();
-        syncFormMetadata();
         fields.forEach((field) => setFieldError(field, ""));
 
-        setFormStatus("Thank you! Your enquiry has been submitted successfully.", "success");
+        setFormStatus("Thank you! Our team will contact you shortly.", "success");
       } catch (error) {
         setFormStatus("Something went wrong. Please try again.", "error");
       } finally {
