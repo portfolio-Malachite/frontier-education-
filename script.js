@@ -480,7 +480,12 @@
     };
   };
 
-  const isValidFormEndpoint = (value) => /^https:\/\/formspree\.io\/f\/[-_a-zA-Z0-9]+(?:\?.*)?$/.test(value);
+  const isPlaceholderEndpoint = (value) => /REPLACE_WITH_REAL_FORM_ID|REAL_FORM_ID|PASTE|YOUR_|XXXXXXXX/i.test(value);
+  const isValidFormEndpoint = (value) => (
+    Boolean(value)
+    && !isPlaceholderEndpoint(value)
+    && /^https:\/\/formspree\.io\/f\/[-_a-zA-Z0-9]+(?:\?.*)?$/.test(value)
+  );
   const isValidAppsScriptEndpoint = (value) => /^https:\/\/script\.google\.com\/macros\/s\/[-_a-zA-Z0-9]+\/exec(?:\?.*)?$/.test(value);
 
   if (form) {

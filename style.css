@@ -1023,7 +1023,7 @@ footer[id] {
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.02em;
-  background: #198a98;
+  background: rgb(13, 85, 63);
 }
 
 .why-title {
@@ -1196,7 +1196,7 @@ footer[id] {
   color: #ffffff;
   font-size: 1.05rem;
   font-weight: 800;
-  background: #0d553f;
+  background: rgb(13, 85, 63);
   border-radius: 4px;
   box-shadow: 0 18px 34px rgba(13, 85, 63, 0.16);
   transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
