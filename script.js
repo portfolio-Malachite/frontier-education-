@@ -11,7 +11,6 @@
   const form = document.querySelector("#enquiry-form");
   const status = document.querySelector("#form-status");
   const formSubmitButton = form?.querySelector(".btn-form") || null;
-  const phoneField = form?.querySelector("#phone") || null;
   const honeypotField = form?.querySelector('[name="website"]') || null;
   const siteOriginField = form?.querySelector('[name="siteOrigin"]') || null;
   const pageUrlField = form?.querySelector('[name="pageUrl"]') || null;
@@ -30,7 +29,6 @@
   let isSubmitting = false;
   let lastSubmissionFingerprint = "";
   let lastSubmissionAt = 0;
-  let phoneInputInstance = null;
 
   const debounce = (callback, delay = 120) => {
     let timeoutId = 0;
@@ -423,54 +421,6 @@
     }
   };
 
-  const initInternationalPhoneField = () => {
-    if (!phoneField || typeof window.intlTelInput !== "function") return;
-
-    phoneInputInstance = window.intlTelInput(phoneField, {
-      initialCountry: "auto",
-      preferredCountries: ["au", "in", "us"],
-      separateDialCode: true,
-      nationalMode: false,
-      autoPlaceholder: "polite",
-      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-      geoIpLookup: (callback) => {
-        fetch("https://ipapi.co/json/")
-          .then((response) => response.json())
-          .then((data) => callback((data?.country_code || "au").toLowerCase()))
-          .catch(() => callback("au"));
-      }
-    });
-  };
-
-  const getInternationalPhoneValue = () => {
-    const rawValue = normaliseInput(phoneField?.value || "");
-    if (!rawValue) return "";
-
-    if (phoneInputInstance && typeof phoneInputInstance.getNumber === "function") {
-      const formattedValue = normaliseInput(phoneInputInstance.getNumber());
-      if (formattedValue) return formattedValue;
-    }
-
-    const dialCode = phoneInputInstance?.getSelectedCountryData?.().dialCode || "";
-    if (dialCode && !rawValue.startsWith("+")) {
-      return `+${dialCode} ${rawValue}`.trim();
-    }
-
-    return rawValue;
-  };
-
-  const isInternationalPhoneValid = () => {
-    const formattedValue = getInternationalPhoneValue();
-    if (!formattedValue) return false;
-
-    if (phoneInputInstance && typeof phoneInputInstance.isValidNumber === "function" && window.intlTelInputUtils) {
-      return phoneInputInstance.isValidNumber();
-    }
-
-    const digits = formattedValue.replace(/\D/g, "");
-    return digits.length >= 7 && digits.length <= 15;
-  };
-
   const setFieldError = (field, message) => {
     const wrapper = field.closest(".field");
     const error = document.querySelector(`[data-error-for="${field.id}"]`);
@@ -501,7 +451,8 @@
     }
 
     if (field.type === "tel" && value) {
-      if (!isInternationalPhoneValid()) {
+      const digits = value.replace(/\D/g, "");
+      if (digits.length < 7) {
         setFieldError(field, "Please enter a valid phone number.");
         return false;
       }
@@ -519,7 +470,7 @@
     return {
       fullName: normaliseInput(fields.find((field) => field.name === "fullName")?.value || ""),
       email: normaliseInput(fields.find((field) => field.name === "email")?.value || "").toLowerCase(),
-      phone: getInternationalPhoneValue(),
+      phone: normaliseInput(fields.find((field) => field.name === "phone")?.value || ""),
       nationality: normaliseInput(fields.find((field) => field.name === "nationality")?.value || ""),
       preferredCourse,
       campus: preferredCourse,
@@ -540,7 +491,6 @@
     ];
 
     syncFormMetadata();
-    initInternationalPhoneField();
     setSubmittingState(false);
 
     fields.forEach((field) => {
@@ -550,8 +500,6 @@
       });
       field.addEventListener("change", () => validateField(field));
     });
-
-    phoneField?.addEventListener("countrychange", () => validateField(phoneField));
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -632,7 +580,6 @@
         lastSubmissionAt = now;
 
         form.reset();
-        phoneInputInstance?.setNumber("");
         fields.forEach((field) => setFieldError(field, ""));
 
         setFormStatus("Thank you! Our team will contact you shortly.", "success");

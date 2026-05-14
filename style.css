@@ -2897,23 +2897,6 @@ body.menu-open .mobile-sticky-cta {
   width: 100%;
   min-height: 50px;
   padding: 0 16px;
-  color: #3a3a3a;
-  font-size: 15px;
-  font-weight: 400;
-  background: #ffffff;
-  border: 1px solid #c8c8c8;
-  border-radius: 6px;
-  box-shadow: none;
-}
-
-.lead-card .field .iti {
-  width: 100%;
-}
-
-.lead-card .field .iti input {
-  width: 100%;
-  min-height: 50px;
-  padding-right: 16px;
   color: #1a2421;
   font-size: 15px;
   font-weight: 400;
@@ -2921,36 +2904,6 @@ body.menu-open .mobile-sticky-cta {
   border: 1px solid #d5dcdc;
   border-radius: 6px;
   box-shadow: none;
-}
-
-.lead-card .field .iti input::placeholder {
-  color: #7b7c7d;
-  opacity: 1;
-}
-
-.lead-card .field .iti--separate-dial-code .iti__selected-flag {
-  padding: 0 14px 0 12px;
-  background: #ffffff;
-  border-right: 1px solid #d5dcdc;
-  border-radius: 6px 0 0 6px;
-}
-
-.lead-card .field .iti__selected-dial-code,
-.lead-card .field .iti__country-name,
-.lead-card .field .iti__dial-code {
-  color: #1a2421;
-}
-
-.lead-card .field .iti__arrow {
-  border-top-color: #1a2421;
-}
-
-.lead-card .field .iti input:focus {
-  color: #1a2421;
-  background: #ffffff;
-  border-color: #0e6848;
-  box-shadow: none;
-  transform: none;
 }
 
 .lead-card .field select {
@@ -2963,15 +2916,15 @@ body.menu-open .mobile-sticky-cta {
 }
 
 .lead-card .field input::placeholder {
-  color: #777777;
+  color: #7b7c7d;
   opacity: 1;
 }
 
 .lead-card .field input:focus,
 .lead-card .field select:focus {
-  color: #1f1f1f;
+  color: #1a2421;
   background: #ffffff;
-  border-color: #0d553f;
+  border-color: #0e6848;
   box-shadow: none;
   transform: none;
 }
@@ -2980,40 +2933,6 @@ body.menu-open .mobile-sticky-cta {
 .lead-card .field.is-invalid select {
   border-color: #c74848;
   background: #ffffff;
-}
-
-.lead-card .field.is-invalid .iti input,
-.lead-card .field.is-invalid .iti--separate-dial-code .iti__selected-flag {
-  border-color: #c74848;
-}
-
-.lead-card .field .iti__country-list {
-  width: min(320px, calc(100vw - 48px));
-  margin-top: 8px;
-  background: #ffffff;
-  border: 1px solid #d5dcdc;
-  border-radius: 10px;
-  box-shadow: 0 14px 30px rgba(7, 13, 13, 0.12);
-}
-
-.lead-card .field .iti__country {
-  padding-block: 10px;
-}
-
-.lead-card .field .iti__country.iti__highlight,
-.lead-card .field .iti__country:hover {
-  background: #f5f7f6;
-}
-
-.lead-card .field .iti__search-input {
-  color: #1a2421;
-  background: #ffffff;
-  border: 1px solid #d5dcdc;
-}
-
-.lead-card .field .iti__search-input:focus {
-  border-color: #0e6848;
-  outline: 0;
 }
 
 .lead-card .field-error {
