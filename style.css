@@ -3441,3 +3441,167 @@ body.menu-open .mobile-sticky-cta {
   width: min(100%, 290px);
   min-width: 0;
 }
+
+/* Responsive compatibility refinements */
+html,
+body {
+  max-width: 100%;
+}
+
+@supports (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
+.section-inner,
+.hero-grid,
+.hero-copy,
+.lead-card,
+.nav-shell,
+.utility-inner,
+.footer-inner,
+.footer-links,
+.footer-links > div,
+.cta-inner,
+.cta-actions,
+.faq-list,
+.accreditation-card,
+.career-path-card,
+.visit-campus-card {
+  min-width: 0;
+}
+
+.hero-copy > .hero-actions:not(.gain-actions) .btn {
+  min-width: 221px;
+}
+
+.cta-actions .btn {
+  min-width: 215px;
+}
+
+.footer-links {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.footer-links a,
+.footer-links p,
+.footer-brand p,
+.footer-bottom p {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.footer-links a {
+  min-width: 0;
+}
+
+.process-card::after {
+  right: 0;
+  bottom: 0;
+  transform: translateY(38%);
+}
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .footer-inner {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  }
+
+  .footer-links {
+    gap: 18px;
+  }
+
+  .footer-links a,
+  .footer-links p {
+    font-size: clamp(0.86rem, 1.35vw, 0.94rem);
+  }
+}
+
+@media (min-width: 980px) and (max-width: 1100px) {
+  .desktop-nav {
+    gap: 14px;
+  }
+
+  .desktop-nav a {
+    font-size: 14px;
+  }
+
+  .brand-logo {
+    width: clamp(188px, 20vw, 206px);
+  }
+
+  .nav-shell .nav-cta {
+    min-width: 132px;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-copy > .hero-actions:not(.gain-actions) {
+    width: min(100%, 210px);
+  }
+
+  .hero-copy > .hero-actions:not(.gain-actions) .btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cta-actions .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 374px) {
+  .nav-shell {
+    width: min(100%, calc(100vw - 16px));
+    min-height: 72px;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .brand-logo {
+    width: clamp(100px, 32vw, 112px);
+  }
+
+  .nav-toggle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .nav-shell .nav-cta {
+    min-width: 104px;
+    min-height: 42px;
+    padding: 0 9px;
+    font-size: 13px;
+  }
+
+  .mobile-panel {
+    top: calc(100% + 8px);
+    left: 8px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 340px) {
+  .nav-shell {
+    gap: 6px;
+    padding: 0 6px;
+  }
+
+  .brand-logo {
+    width: 98px;
+  }
+
+  .nav-toggle {
+    width: 46px;
+    height: 46px;
+  }
+
+  .nav-shell .nav-cta {
+    min-width: 100px;
+    padding: 0 8px;
+    font-size: 12.5px;
+  }
+}

@@ -47,5 +47,3 @@ Use these settings:
 - **Framework Preset:** Other
 - **Build Command:** Empty
 - **Output Directory:** Empty
-
-The included `vercel.json` keeps deployment static-friendly.
