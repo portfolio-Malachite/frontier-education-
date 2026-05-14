@@ -1598,12 +1598,17 @@ footer[id] {
   gap: 22px;
   max-width: 1280px;
   margin: 0 auto;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 .accreditation-card {
   display: grid;
-  gap: 16px;
+  grid-template-rows: minmax(220px, 1fr) minmax(2.5em, auto);
+  gap: 14px;
   justify-items: center;
+  align-content: start;
+  height: 100%;
   text-align: center;
 }
 
@@ -1611,7 +1616,7 @@ footer[id] {
   display: grid;
   place-items: center;
   width: 100%;
-  min-height: 220px;
+  height: 220px;
   padding: 28px 26px;
   background: #ffffff;
   border: 1px solid #dfe7e7;
@@ -1633,6 +1638,9 @@ footer[id] {
   line-height: 1.25;
   font-weight: 800;
   letter-spacing: -0.02em;
+  display: grid;
+  align-items: start;
+  min-height: 2.5em;
 }
 
 .testimonial-card {
