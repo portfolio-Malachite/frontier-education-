@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" role="img" aria-labelledby="title">
+  <title>ASQA Accredited logo</title>
+  <rect width="620" height="220" fill="none"/>
+  <g transform="translate(22 74)" fill="#1f5fa8">
+    <path d="M31 0c8 10 12 22 13 36h14c-8 3-14 9-18 17-4-8-10-14-18-17h14c1-14 5-26 13-36z"/>
+    <path d="M28 38h6v46h-6zm18 0h6v46h-6zm-34 10h56v6H12zm11 15 17 12 17-12v18L40 94 23 81z"/>
+  </g>
+  <g transform="translate(102 54)" fill="#1f5fa8">
+    <text x="0" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="600">Australian Government</text>
+    <line x1="0" y1="56" x2="430" y2="56" stroke="#89a6c7" stroke-width="3"/>
+    <text x="0" y="100" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600">Australian Skills Quality Authority</text>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 220" role="img" aria-labelledby="title">
+  <title>Nationally Recognised Training logo</title>
+  <rect width="460" height="220" fill="none"/>
+  <g transform="translate(125 18)">
+    <polygon points="88,0 174,0 138,28 52,28" fill="#006948"/>
+    <polygon points="42,0 94,0 58,12 6,12" fill="#d71f42"/>
+    <polygon points="26,22 150,22 122,42 0,42" fill="#d71f42"/>
+    <polygon points="80,22 182,22 154,42 52,42" fill="#006948"/>
+    <polygon points="16,46 138,46 114,62 0,62" fill="#d71f42"/>
+    <polygon points="68,46 168,46 144,62 44,62" fill="#006948"/>
+    <polygon points="26,68 126,68 106,82 8,82" fill="#d71f42"/>
+    <polygon points="60,68 146,68 126,82 40,82" fill="#006948"/>
+    <polygon points="36,88 116,88 100,100 22,100" fill="#d71f42"/>
+    <polygon points="60,88 130,88 114,100 44,100" fill="#006948"/>
+    <polygon points="48,106 106,106 94,116 36,116" fill="#d71f42"/>
+    <polygon points="64,106 118,106 106,116 52,116" fill="#006948"/>
+    <polygon points="60,122 98,122 90,130 52,130" fill="#d71f42"/>
+    <polygon points="70,122 106,122 98,130 62,130" fill="#006948"/>
+  </g>
+  <g fill="#1f5b49" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+    <text x="230" y="170" font-size="28" font-weight="500" letter-spacing="1">NATIONALLY RECOGNISED</text>
+    <text x="230" y="204" font-size="28" font-weight="500" letter-spacing="1">TRAINING</text>
+  </g>
+</svg>
