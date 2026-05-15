@@ -5,12 +5,19 @@
   "description": "Frontier Education landing page with Vercel API + Resend form delivery.",
   "scripts": {
     "dev": "vercel dev",
-    "check": "node --check script.js && node --check api/contact.js"
+    "check": "node --check script.js && node --check api/contact.js",
+    "build": "bash scripts/build-github-pages.sh",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist -b gh-pages --dotfiles",
+    "deploy:git": "bash scripts/deploy-gh-pages.sh"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
     "resend": "^6.3.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }
