@@ -16,7 +16,7 @@
   <meta property="og:url" content="https://frontiereducation.edu.au/">
   <meta property="og:image" content="./assets/images/industry-connected-course-900.jpg">
 
-  <link rel="preload" href="./assets/logos/frontier-education-navbar.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="./assets/logos/frontier-education-logo.png" as="image">
   <link rel="preload" href="./assets/images/industry-connected-course-900.jpg" as="image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -121,7 +121,8 @@
     <div class="header-wrap">
       <div class="nav-shell" data-nav-shell>
         <a class="brand" href="#top" aria-label="Frontier Education home">
-          <img class="brand-logo" src="./assets/logos/frontier-education-navbar.svg" alt="Frontier Education" width="283" height="107">
+          <!-- Official Frontier Education logo downloaded from the official website assets. Replace this file if Frontier updates its brand asset. -->
+          <img class="brand-logo" src="./assets/logos/frontier-education-logo.svg" alt="Frontier Education" width="174" height="60">
         </a>
 
         <nav class="desktop-nav" aria-label="Primary navigation">
@@ -215,15 +216,13 @@
 
           <form
             class="enquiry-form"
-            id="consultation-form"
-            action="https://formspree.io/f/mykoabyq"
+            id="enquiryForm"
             method="POST"
+            novalidate
           >
-            <input type="hidden" name="_subject" value="New Frontier Education Lead">
-
             <div class="field">
               <label for="full-name">Full Name</label>
-              <input id="full-name" name="name" type="text" autocomplete="name" placeholder="Full Name" required>
+              <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Full Name" required>
               <span class="field-error" data-error-for="full-name"></span>
             </div>
 
@@ -445,16 +444,20 @@
             </div>
 
             <div class="field">
-              <label for="preferred-course">Preferred Course</label>
-              <select id="preferred-course" name="course" required>
+              <label for="course">Preferred Course</label>
+              <select id="course" name="course" required>
                 <option value="">--Preferred Course</option>
                 <option>Hospitality</option>
                 <option>Community Services</option>
                 <option>Business &amp; Management</option>
                 <option>Artificial Intelligence</option>
               </select>
-              <span class="field-error" data-error-for="preferred-course"></span>
+              <span class="field-error" data-error-for="course"></span>
             </div>
+
+            <input type="hidden" name="siteOrigin" value="">
+            <input type="hidden" name="pageUrl" value="">
+            <input type="hidden" name="_subject" value="New Frontier Education Consultation Enquiry">
 
             <button class="btn btn-primary btn-form" type="submit" data-default-label="Submit">Submit</button>
             <p class="trust-line">Our study advisor will contact you shortly.</p>
@@ -557,10 +560,12 @@
               </svg>
               <span>Chat on WhatsApp</span>
             </a>
-            <!-- <a class="gain-cta-button" href="tel:+61422961101" aria-label="Call Frontier Education on +61 422 961 101">Call Us On +61 7 2115 7877</a> -->
-             <a class="btn btn-secondary btn-large" href="tel:+61721157877" aria-label="Call Frontier Education on +61 7 2115 7877">
-  <span>Call Us On +61 7 2115 7877</span>
-</a>
+            <a class="btn btn-primary btn-large" href="tel:+61422961101" aria-label="Call Frontier Education on +61 422 961 101">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.11.37 2.3.56 3.58.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.27.19 2.47.56 3.58a1 1 0 0 1-.25 1.01l-2.19 2.2Z"></path>
+              </svg>
+              <span>Call Us On +61 7 2115 7877</span>
+            </a>
           </div>
         </div>
 
@@ -713,28 +718,28 @@
         <div class="accreditation-grid">
           <article class="accreditation-card reveal">
             <div class="accreditation-logo-frame">
-              <img src="./assets/images/accreditation/frontier-education-logo.png" alt="Australian Qualifications Framework logo" width="620" height="120" loading="lazy">
+              <img src="./assets/images/accreditation/frontier-education-logo.png" alt="Australian Qualifications Framework logo" width="460" height="220" loading="lazy">
             </div>
             <h2>Australian Qualifications Framework</h2>
           </article>
 
           <article class="accreditation-card reveal">
             <div class="accreditation-logo-frame">
-              <img src="./assets/images/accreditation/asqa-logo.svg" alt="Australian Skills Quality Authority logo" width="620" height="220" loading="lazy">
+              <img src="./assets/images/accreditation/asqa-logo.png" alt="Australian Skills Quality Authority logo" width="620" height="220" loading="lazy">
             </div>
             <h2>ASQA Accredited</h2>
           </article>
 
           <article class="accreditation-card reveal">
             <div class="accreditation-logo-frame">
-              <img src="./assets/images/accreditation/cricos-logo.svg" alt="CRICOS logo" width="460" height="220" loading="lazy">
+              <img src="./assets/images/accreditation/cricos-logo.png" alt="CRICOS logo" width="460" height="220" loading="lazy">
             </div>
             <h2>CRICOS Registered</h2>
           </article>
 
           <article class="accreditation-card reveal">
             <div class="accreditation-logo-frame">
-              <img src="./assets/images/accreditation/nrt-logo.svg" alt="Nationally Recognised Training logo" width="460" height="220" loading="lazy">
+              <img src="./assets/images/accreditation/nrt-logo.png" alt="Nationally Recognised Training logo" width="460" height="220" loading="lazy">
             </div>
             <h2>Nationally Recognised Training</h2>
           </article>

@@ -1,30 +1,49 @@
-# Frontier Education
+# Frontier Education Website
 
-Static landing page for Frontier Education, ready for local preview and GitHub Pages hosting.
+Static HTML/CSS/JS landing page with a Vercel serverless contact API using Resend for email delivery.
 
-## Files
+## Project Structure
 
-- `index.html` - page markup
-- `style.css` - site styles
-- `script.js` - navbar, CTA, form, and interaction logic
-- `google-apps-script/Code.gs` - Google Apps Script backend for Sheets + Gmail
-- `google-apps-script/appsscript.json` - Apps Script manifest
-- `google-apps-script/SETUP.md` - local spreadsheet, Apps Script, and deployment guide
+- `index.html`
+- `style.css`
+- `script.js`
+- `api/contact.js`
+- `package.json`
+- `assets/`
+- `images/`
+- `vercel.json`
 
-## Local Preview
+## Contact Form Flow
+
+1. Frontend validates the enquiry form in `script.js`.
+2. Frontend submits JSON to `/api/contact`.
+3. `api/contact.js` validates payload and sends the enquiry email through Resend.
+4. API responds with `{ ok: true, status: "success" }` so the existing success message flow is preserved.
+
+## Environment Variables
+
+Configure these in Vercel Project Settings (and optionally in local `.env` for local testing):
+
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `RESEND_TO_EMAIL`
+
+Do not commit real secrets to the repository.
+
+## Local Development
 
 ```bash
-python3 -m http.server 4173
+npm install
+npm run check
+npm run dev
 ```
 
-Then open `http://127.0.0.1:4173`.
+## Vercel Deployment
 
-## Enquiry Form Setup
+Use these settings:
 
-The enquiry form is configured for Formspree submission through `https://formspree.io/f/mykoabyq`.
+- **Framework Preset:** Other
+- **Build Command:** Empty
+- **Output Directory:** Empty
 
-## Notes
-
-- The site is built with plain HTML, CSS, and JavaScript.
-- The frontend uses one Formspree submit handler with success message: `Thank you! Our team will contact you shortly.`
-- Recipient routing is managed in the Formspree dashboard for endpoint `mykoabyq` (currently verified against `adityakumarasd698@gmail.com`).
+Set environment variables in Vercel before deploying so `api/contact.js` can send emails successfully.
