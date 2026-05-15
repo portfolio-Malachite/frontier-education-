@@ -1,49 +1,58 @@
-# Frontier Education Static Website
+# Frontier Education Website
 
-Static HTML, CSS, and JavaScript rebuild of the Frontier Education landing page with a Google Apps Script powered enquiry form.
+Static HTML/CSS/JS landing page with a Vercel serverless contact API using Resend for email delivery.
 
 ## Project Structure
 
 - `index.html`
 - `style.css`
 - `script.js`
-- `Code.gs`
+- `api/contact.js`
+- `package.json`
+- `vercel.json`
 - `assets/`
 - `images/`
-- `vercel.json`
+- `google-apps-script/` (optional fallback integration)
 
-## Google Apps Script Setup
+## Contact Form Flow (Default)
 
-1. Open [Google Apps Script](https://script.google.com/).
-2. Create a new project.
-3. Replace the default script with the contents of `Code.gs`.
-4. In `Code.gs`, replace `shahrukhoffice.works@gmail.com` if you want enquiries sent to a different Gmail address.
-5. Click **Deploy** > **New deployment**.
-6. Choose **Web app**.
-7. Set **Execute as** to **Me**.
-8. Set **Who has access** to **Anyone**.
-9. Click **Deploy** and approve the Gmail/MailApp permissions.
-10. Copy the generated Web App URL.
-11. Open `script.js` and paste the Web App URL here:
+1. Frontend validates the enquiry form in `script.js`.
+2. Frontend submits JSON to `/api/contact`.
+3. `api/contact.js` validates payload and sends enquiry email through Resend.
+4. API responds with `{ ok: true, status: "success" }`.
 
-```js
-const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+## Environment Variables
+
+Set these in Vercel Project Settings (and optionally local `.env`):
+
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `RESEND_TO_EMAIL`
+
+Do not commit real secrets.
+
+## Local Development
+
+```bash
+npm install
+npm run check
+npm run dev
 ```
 
-## Website Deployment
+## Deploy to Vercel (Fastest)
 
-### GitHub Pages
+1. Import this GitHub repo into Vercel.
+2. Framework preset: `Other`.
+3. Build command: leave empty.
+4. Output directory: leave empty.
+5. Add the three environment variables above.
+6. Deploy.
 
-1. Push this folder to a GitHub repository.
-2. Go to **Settings** > **Pages**.
-3. Select the branch that contains `index.html`.
-4. Use the repository root as the publish folder.
-5. Save and wait for GitHub Pages to publish the site.
+## Optional Google Apps Script Fallback
 
-### Vercel
+If you want to use Google Apps Script instead of Vercel API, setup docs are available in:
 
-Use these settings:
+- `google-apps-script/SETUP.md`
+- `google-apps-script/Code.gs`
 
-- **Framework Preset:** Other
-- **Build Command:** Empty
-- **Output Directory:** Empty
+You would then point the frontend submit URL to your deployed Apps Script endpoint.

@@ -19,9 +19,7 @@
   const nextButton = document.querySelector("[data-carousel-next]");
   const faqItems = [...document.querySelectorAll(".faq-item")];
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  // Paste your deployed Google Apps Script Web App URL below.
-  const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwwFMDKL2sPGxX8DOqNegICmedR4Cz49pTLUQPS5A3RKHcNfceoZ7UYikijYa59DXjL-g/exec";
-  const formScriptUrl = GOOGLE_APPS_SCRIPT_WEB_APP_URL.trim();
+  const formSubmitEndpoint = "/api/contact";
 
   let headerOffset = 120;
   let scrollFrame = 0;
@@ -476,9 +474,6 @@
     };
   };
 
-  const isPlaceholderEndpoint = (value) => /GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE|PASTE|YOUR_|XXXXXXXX/i.test(value);
-  const isValidAppsScriptEndpoint = (value) => /^https:\/\/script\.google\.com\/macros\/s\/[-_a-zA-Z0-9]+\/exec(?:\?.*)?$/.test(value);
-
   if (form) {
     const fields = [
       ...form.querySelectorAll(
@@ -511,8 +506,8 @@
         return;
       }
 
-      if (!isValidAppsScriptEndpoint(formScriptUrl) || isPlaceholderEndpoint(formScriptUrl)) {
-        setFormStatus("Please add the Google Apps Script Web App URL in script.js.", "error");
+      if (!formSubmitEndpoint) {
+        setFormStatus("Form endpoint is not configured.", "error");
         return;
       }
 
@@ -529,13 +524,12 @@
       setFormStatus("Submitting...", "loading");
 
       try {
-        const response = await fetch(formScriptUrl, {
+        const response = await fetch(formSubmitEndpoint, {
           method: "POST",
           headers: {
-            "Content-Type": "text/plain;charset=utf-8"
+            "Content-Type": "application/json;charset=utf-8"
           },
-          body: JSON.stringify(payload),
-          redirect: "follow"
+          body: JSON.stringify(payload)
         });
 
         let result = null;
@@ -546,7 +540,7 @@
         }
 
         if (!response.ok || !result || (result.status !== "success" && result.ok !== true)) {
-          throw new Error("Submission failed");
+          throw new Error(result?.error || "Submission failed");
         }
 
         lastSubmissionFingerprint = submissionFingerprint;
